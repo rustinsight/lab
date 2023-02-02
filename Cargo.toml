@@ -1,6 +1,6 @@
 [package]
 name = "rustinsight"
-version = "0.1.3"
+version = "0.1.4"
 edition = "2021"
 authors = ["Denis Kolodin <deniskolodin@gmail.com>"]
 description = "The launcher app for Rust Insight! Lab"
