@@ -1,3 +1,4 @@
+use crate::app_info;
 use crate::VERSION;
 use anyhow::Error;
 use chrono::{DateTime, Duration, Utc};
@@ -133,8 +134,9 @@ impl Cacher {
     /// In case if binaries were deleted
     async fn repair_config(&mut self) -> Result<(), Error> {
         let mut entries = fs::read_dir(&self.bin_dir).await?;
+        let prefix = &app_info::LEARN.name;
         while let Some(entry) = entries.next_entry().await? {
-            if entry.file_name().to_string_lossy().starts_with("ri-learn") {
+            if entry.file_name().to_string_lossy().starts_with(prefix) {
                 return Ok(());
             }
         }

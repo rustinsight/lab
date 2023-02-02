@@ -1,8 +1,8 @@
 pub mod app;
+pub mod app_info;
 pub mod cacher;
 pub mod crates;
 pub mod github;
-pub mod logo;
 pub mod opts;
 
 use once_cell::sync::Lazy;

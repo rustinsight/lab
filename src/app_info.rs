@@ -1,6 +1,7 @@
 pub static LEARN: AppInfo = AppInfo {
-    line: "  Ri!  ",
-    name: "  Lab  ",
+    name: "ri-lab",
+    line_1: "  Ri!  ",
+    line_2: "  Lab  ",
     bg: Color(255, 61, 0),
     link: "https://api.github.com/repos/rustinsight/lab/releases",
 };
@@ -9,8 +10,8 @@ pub static LEARN: AppInfo = AppInfo {
 
 /*
 pub static STACK: AppInfo = AppInfo {
-    line: "  Ri!  ",
-    name: " Stack ",
+    line_1: "  Ri!  ",
+    line_2: " Stack ",
     bg: Color(215, 164, 35),
     link: "https://api.github.com/repos/rustinsight/stack/releases",
 };
@@ -18,8 +19,9 @@ pub static STACK: AppInfo = AppInfo {
 
 #[derive(Debug, Clone)]
 pub struct AppInfo {
-    pub line: &'static str,
     pub name: &'static str,
+    pub line_1: &'static str,
+    pub line_2: &'static str,
     pub bg: Color,
     pub link: &'static str,
 }

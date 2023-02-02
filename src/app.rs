@@ -1,5 +1,5 @@
+use crate::app_info::{self, AppInfo, Color};
 use crate::cacher::{AppState, Cacher};
-use crate::logo::{self, AppInfo, Color};
 use crate::opts::{AppCommand, Opts};
 use crate::{crates::CratesApi, github::GitHubApi};
 use anyhow::Error;
@@ -10,8 +10,6 @@ use std::process::Stdio;
 use tar::Archive;
 use tokio::process::{Child, Command};
 use tokio::{select, signal};
-
-const RI_LAB: &str = "ri-lab";
 
 pub struct App {
     cacher: Cacher,
@@ -82,11 +80,11 @@ impl App {
         if self.cacher.ri_learn.is_update_required() || force {
             println!("Checking an update for the app...");
 
-            let latest = self.github_api.latest_release(&logo::LEARN).await?;
+            let latest = self.github_api.latest_release(&app_info::LEARN).await?;
             let version = latest.version.clone();
             if self.cacher.ri_learn.is_outdated(version) {
                 println!("Downloading {}...", latest.version);
-                let url = latest.get_asset_for_os(RI_LAB)?;
+                let url = latest.get_asset_for_os(&app_info::LEARN)?;
                 let tar_gz = self.github_api.download_assets(url).await?.into_std().await;
                 println!("Unpacking...");
                 let tar = GzDecoder::new(tar_gz);
@@ -109,7 +107,7 @@ impl App {
         if self.cacher.ri_stack.is_update_required() || force {
             println!("Checking an update for the stack...");
 
-            let latest = self.github_api.latest_release(&logo::STACK).await?;
+            let latest = self.github_api.latest_release(&app_info::STACK).await?;
             let version = latest.version.clone();
             if self.cacher.ri_stack.is_outdated(version) {
                 self.cacher.ri_stack.version = Some(latest.version);
@@ -122,9 +120,9 @@ impl App {
     }
     */
 
-    fn start_app(&mut self) -> Result<(), Error> {
+    fn start_app(&mut self, app_info: &AppInfo) -> Result<(), Error> {
         let mut bin_path = self.cacher.bin_dir().clone();
-        bin_path.push(RI_LAB);
+        bin_path.push(app_info.name);
         let child = Command::new(bin_path)
             .kill_on_drop(true)
             .stdin(Stdio::null())
@@ -156,9 +154,9 @@ impl App {
         let launcher_ver = self.cacher.launcher.get_version()?;
         let app_ver = app_state.get_version()?;
         let Color(r, g, b) = logo.bg;
-        let ri = logo.line.bold().white().on_truecolor(r, g, b);
+        let ri = logo.line_1.bold().white().on_truecolor(r, g, b);
         println!("{ri} v{app_ver} (product)");
-        let name = logo.name.bold().white().on_truecolor(r, g, b);
+        let name = logo.line_2.bold().white().on_truecolor(r, g, b);
         let launcher_info = format!("v{launcher_ver} (launcher)").truecolor(100, 100, 100);
         println!("{name} {launcher_info}");
         println!("");
@@ -185,13 +183,13 @@ impl App {
 
     /*
     pub async fn command_stack(&mut self) -> Result<(), Error> {
-        self.show_banner(&logo::STACK, &self.cacher.ri_stack)?;
+        self.show_banner(&app_info::STACK, &self.cacher.ri_stack)?;
         Ok(())
     }
     */
 
     pub async fn command_learn(&mut self) -> Result<(), Error> {
-        self.show_banner(&logo::LEARN, &self.cacher.ri_learn)?;
+        self.show_banner(&app_info::LEARN, &self.cacher.ri_learn)?;
 
         let url = "http://localhost:6361/";
         let link = url.green(); //.truecolor(255, 61, 0);
@@ -203,7 +201,7 @@ impl App {
         let workdir = workdir.display().to_string().green();
         println!("Working folder is: {workdir}");
 
-        self.start_app()?;
+        self.start_app(&app_info::LEARN)?;
         webbrowser::open(url).ok();
         select! {
             _ = signal::ctrl_c() => {

@@ -1,5 +1,5 @@
+use crate::app_info::AppInfo;
 use crate::built_info;
-use crate::logo::AppInfo;
 use crate::RI_USER_AGENT;
 use anyhow::Error;
 use futures::StreamExt;
@@ -83,10 +83,11 @@ pub struct Release {
 }
 
 impl Release {
-    pub fn get_asset_for_os(&self, name: &str) -> Result<&str, Error> {
+    pub fn get_asset_for_os(&self, app_info: &AppInfo) -> Result<&str, Error> {
         let os = built_info::CFG_OS;
         let arch = built_info::CFG_TARGET_ARCH;
         let ver = &self.version;
+        let name = &app_info.name;
         let expected_asset = format!("{name}-{ver}-{os}-{arch}.tar.gz");
         for asset in &self.assets {
             if asset.name == expected_asset {
