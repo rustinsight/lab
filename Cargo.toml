@@ -1,0 +1,35 @@
+[package]
+name = "rustinsight"
+version = "0.1.2"
+edition = "2021"
+authors = ["Denis Kolodin <deniskolodin@gmail.com>"]
+description = "The launcher app for Rust Insight! Lab"
+repository = "https://github.com/rustinsight/lab"
+homepage = "https://rustinsight.com"
+license = "GPL-3.0"
+readme = "README.md"
+
+[dependencies]
+anyhow = "1.0.68"
+chrono = { version = "0.4.23", features = ["serde"] }
+clap = { version = "4.1.4", features = ["derive"] }
+colored = "2.0.0"
+derive_more = "0.99.17"
+dialoguer = "0.10.3"
+dirs = "4.0.0"
+flate2 = "1.0.25"
+futures = "0.3.26"
+indicatif = "0.17.3"
+once_cell = "1.17.0"
+platforms = "3.0.2"
+reqwest = { version = "0.11.14", features = ["json", "stream"] }
+semver = { version = "1.0.16", features = ["serde"] }
+serde = { version = "1.0.152", features = ["derive"] }
+tar = "0.4.38"
+tempfile = "3.3.0"
+tokio = { version = "1.25.0", features = ["full"] }
+toml = "0.7.1"
+webbrowser = "0.8.7"
+
+[build-dependencies]
+built = "0.5.2"
