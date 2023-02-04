@@ -33,3 +33,11 @@ webbrowser = "0.8.7"
 
 [build-dependencies]
 built = "0.5.2"
+
+[[bin]]
+name = "ride"
+required-features = ["ride"]
+
+[features]
+default = ["ride"]
+ride = []
