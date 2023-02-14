@@ -133,10 +133,13 @@ impl Cacher {
 
     /// In case if binaries were deleted
     async fn repair_config(&mut self) -> Result<(), Error> {
+        // Update launcher's version to the current
+        self.launcher.version = Some(VERSION.clone());
+        // Checking binaries
         let mut entries = fs::read_dir(&self.bin_dir).await?;
-        let prefix = &app_info::LEARN.name;
+        let app_prefix = &app_info::LEARN.name;
         while let Some(entry) = entries.next_entry().await? {
-            if entry.file_name().to_string_lossy().starts_with(prefix) {
+            if entry.file_name().to_string_lossy().starts_with(app_prefix) {
                 return Ok(());
             }
         }
