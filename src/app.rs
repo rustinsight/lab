@@ -19,18 +19,18 @@ pub struct App {
 }
 
 impl App {
-    pub async fn entrypoint(opts: Opts) -> Result<(), Error> {
+    pub async fn entrypoint(opts: Opts, ride: bool) -> Result<(), Error> {
         let mut app = Self::init().await?;
         match opts.command {
             None => {
                 app.command_update(false).await?;
-                app.command_learn().await?;
+                app.command_learn(ride).await?;
             }
             Some(AppCommand::Update) => {
                 app.command_update(true).await?;
             }
             Some(AppCommand::Learn) => {
-                app.command_learn().await?;
+                app.command_learn(ride).await?;
             }
             /*
             Some(AppCommand::Stack) => {
@@ -120,10 +120,11 @@ impl App {
     }
     */
 
-    fn start_app(&mut self, app_info: &AppInfo) -> Result<(), Error> {
+    fn start_app(&mut self, app_info: &AppInfo, args: Vec<String>) -> Result<(), Error> {
         let mut bin_path = self.cacher.bin_dir().clone();
         bin_path.push(app_info.name);
         let child = Command::new(bin_path)
+            .args(args)
             .kill_on_drop(true)
             .stdin(Stdio::null())
             .stdout(Stdio::null())
@@ -188,7 +189,7 @@ impl App {
     }
     */
 
-    pub async fn command_learn(&mut self) -> Result<(), Error> {
+    pub async fn command_learn(&mut self, ride: bool) -> Result<(), Error> {
         self.show_banner(&app_info::LEARN, &self.cacher.ri_learn)?;
 
         let url = "http://localhost:6361/";
@@ -201,7 +202,11 @@ impl App {
         let workdir = workdir.display().to_string().green();
         println!("Working folder is: {workdir}");
 
-        self.start_app(&app_info::LEARN)?;
+        let mut args = Vec::new();
+        if ride {
+            args.push("--ride".into());
+        }
+        self.start_app(&app_info::LEARN, args)?;
         webbrowser::open(url).ok();
         select! {
             _ = signal::ctrl_c() => {
