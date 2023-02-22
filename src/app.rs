@@ -1,7 +1,7 @@
 use crate::app_info::{self, AppInfo, Color};
 use crate::cacher::{AppState, Cacher};
 use crate::opts::{AppCommand, Opts};
-use crate::{crates::CratesApi, github::GitHubApi};
+use crate::{crates::CratesApi, github::GitHubApi, probe::ProbeTool};
 use anyhow::Error;
 use colored::Colorize;
 use dialoguer::Confirm;
@@ -15,6 +15,7 @@ pub struct App {
     cacher: Cacher,
     crates_api: CratesApi,
     github_api: GitHubApi,
+    probe_tool: ProbeTool,
     app: Option<Child>,
 }
 
@@ -47,12 +48,11 @@ impl App {
     async fn init() -> Result<Self, Error> {
         let mut cacher = Cacher::create().await?;
         cacher.initialize().await?;
-        let crates_api = CratesApi::new();
-        let github_api = GitHubApi::new();
         Ok(Self {
             cacher,
-            crates_api,
-            github_api,
+            crates_api: CratesApi::new(),
+            github_api: GitHubApi::new(),
+            probe_tool: ProbeTool::new(),
             app: None,
         })
     }
@@ -207,6 +207,9 @@ impl App {
             args.push("--ride".into());
         }
         self.start_app(&app_info::LEARN, args)?;
+        // TODO: Get a port value from the app
+        // or create it dinamically here and set to the app
+        self.probe_tool.probe(url).await?;
         webbrowser::open(url).ok();
         select! {
             _ = signal::ctrl_c() => {

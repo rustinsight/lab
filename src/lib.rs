@@ -4,6 +4,7 @@ pub mod cacher;
 pub mod crates;
 pub mod github;
 pub mod opts;
+pub mod probe;
 
 use once_cell::sync::Lazy;
 use semver::Version;
