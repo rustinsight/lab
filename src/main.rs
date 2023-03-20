@@ -8,7 +8,10 @@ use rustinsight::opts::Opts;
 async fn main() -> Result<(), Error> {
     let opts = Opts::parse();
     if let Err(err) = App::entrypoint(opts, false).await {
-        println!("Failed: {}", err.to_string().red());
+        let err = err.to_string().red();
+        println!("Failed: {err}",);
+        let site = "https://rustinsight.com/troubleshooting".green();
+        println!("Check details here: {site}");
     }
     Ok(())
 }

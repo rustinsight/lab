@@ -28,7 +28,7 @@ impl ProbeTool {
         if self.client.get(url).send().await.is_err() {
             Ok(())
         } else {
-            Err(err!("The port is occupied to bind to: {url}"))
+            Err(err!("The port is not free: {url}"))
         }
     }
 }
