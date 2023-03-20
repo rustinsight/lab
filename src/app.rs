@@ -193,6 +193,8 @@ impl App {
         self.show_banner(&app_info::LEARN, &self.cacher.ri_learn)?;
 
         let url = "http://localhost:6361/";
+        self.probe_tool.probe_is_free(url).await?;
+
         let link = url.green(); //.truecolor(255, 61, 0);
         println!("The app is started and active at: {link}");
         println!("Keep this terminal active to use the app.");
