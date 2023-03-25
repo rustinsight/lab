@@ -3,6 +3,9 @@ use clap::{Parser, Subcommand};
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 pub struct Opts {
+    /// Override an operating system of downloading assets
+    #[clap(long)]
+    pub system: Option<String>,
     #[command(subcommand)]
     pub command: Option<AppCommand>,
 }

@@ -12,6 +12,7 @@ use tokio::process::{Child, Command};
 use tokio::{select, signal};
 
 pub struct App {
+    opts: Opts,
     cacher: Cacher,
     crates_api: CratesApi,
     github_api: GitHubApi,
@@ -21,8 +22,8 @@ pub struct App {
 
 impl App {
     pub async fn entrypoint(opts: Opts, ride: bool) -> Result<(), Error> {
-        let mut app = Self::init().await?;
-        match opts.command {
+        let mut app = Self::init(opts).await?;
+        match app.opts.command {
             None => {
                 app.command_update(false).await?;
                 app.command_learn(ride).await?;
@@ -45,10 +46,11 @@ impl App {
         Ok(())
     }
 
-    async fn init() -> Result<Self, Error> {
+    async fn init(opts: Opts) -> Result<Self, Error> {
         let mut cacher = Cacher::create().await?;
         cacher.initialize().await?;
         Ok(Self {
+            opts,
             cacher,
             crates_api: CratesApi::new(),
             github_api: GitHubApi::new(),
@@ -84,7 +86,8 @@ impl App {
             let version = latest.version.clone();
             if self.cacher.ri_learn.is_outdated(version) {
                 println!("Downloading {}...", latest.version);
-                let url = latest.get_asset_for_os(&app_info::LEARN)?;
+                let os = self.opts.system.as_ref().map(String::as_ref);
+                let url = latest.get_asset_for_os(&app_info::LEARN, os)?;
                 let tar_gz = self.github_api.download_assets(url).await?.into_std().await;
                 println!("Unpacking...");
                 let tar = GzDecoder::new(tar_gz);
