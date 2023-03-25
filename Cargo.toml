@@ -1,9 +1,9 @@
 [package]
 name = "rustinsight"
-version = "0.1.8"
+version = "0.2.0"
 edition = "2021"
 authors = ["Denis Kolodin <deniskolodin@gmail.com>"]
-description = "The launcher app for Rust Insight! Lab"
+description = "The launcher app for Rust Insight! interacive book and multi-tool"
 repository = "https://github.com/rustinsight/lab"
 homepage = "https://rustinsight.com"
 license = "GPL-3.0"
