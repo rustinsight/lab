@@ -1,11 +1,8 @@
 use clap::{Parser, Subcommand};
 
-#[derive(Parser, Debug)]
+#[derive(Debug, Parser)]
 #[command(author, version, about, long_about = None)]
 pub struct Opts {
-    /// Override an operating system of downloading assets
-    #[clap(long)]
-    pub system: Option<String>,
     #[command(subcommand)]
     pub command: Option<AppCommand>,
 }
@@ -17,7 +14,7 @@ pub enum AppCommand {
     /// Launches the Ri! Learn app
     Learn,
     /// Updates the launcher and apps
-    Update,
+    Update(UpdateCommand),
     /*
     /// Opens a link to the latest Stack version
     Stack,
@@ -28,4 +25,14 @@ impl Default for AppCommand {
     fn default() -> Self {
         Self::Learn
     }
+}
+
+#[derive(Debug, Parser, Clone)]
+pub struct UpdateCommand {
+    /// Override an operating system of downloading assets
+    #[clap(long, short)]
+    pub system: Option<String>,
+    /// Reload assets
+    #[clap(long, short)]
+    pub force: bool,
 }

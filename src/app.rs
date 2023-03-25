@@ -1,6 +1,6 @@
 use crate::app_info::{self, AppInfo, Color};
 use crate::cacher::{AppState, Cacher};
-use crate::opts::{AppCommand, Opts};
+use crate::opts::{AppCommand, Opts, UpdateCommand};
 use crate::{crates::CratesApi, github::GitHubApi, probe::ProbeTool};
 use anyhow::Error;
 use colored::Colorize;
@@ -23,13 +23,14 @@ pub struct App {
 impl App {
     pub async fn entrypoint(opts: Opts, ride: bool) -> Result<(), Error> {
         let mut app = Self::init(opts).await?;
-        match app.opts.command {
+        match &app.opts.command {
             None => {
-                app.command_update(false).await?;
+                app.command_update(false, None).await?;
                 app.command_learn(ride).await?;
             }
-            Some(AppCommand::Update) => {
-                app.command_update(true).await?;
+            Some(AppCommand::Update(opts)) => {
+                let opts = Some(opts.clone());
+                app.command_update(true, opts).await?;
             }
             Some(AppCommand::Learn) => {
                 app.command_learn(ride).await?;
@@ -78,15 +79,23 @@ impl App {
         Ok(())
     }
 
-    async fn update_ri_learn(&mut self, force: bool) -> Result<(), Error> {
-        if self.cacher.ri_learn.is_update_required() || force {
+    async fn update_ri_learn(
+        &mut self,
+        force_check: bool,
+        update_cmd: Option<UpdateCommand>,
+    ) -> Result<(), Error> {
+        let mut force_reload = false;
+        let mut os = None;
+        if let Some(update_cmd) = update_cmd.as_ref() {
+            force_reload = update_cmd.force;
+            os = update_cmd.system.as_ref().map(String::as_ref);
+        }
+        if self.cacher.ri_learn.is_update_required() || force_check {
             println!("Checking an update for the app...");
-
             let latest = self.github_api.latest_release(&app_info::LEARN).await?;
             let version = latest.version.clone();
-            if self.cacher.ri_learn.is_outdated(version) {
+            if self.cacher.ri_learn.is_outdated(version) || force_reload {
                 println!("Downloading {}...", latest.version);
-                let os = self.opts.system.as_ref().map(String::as_ref);
                 let url = latest.get_asset_for_os(&app_info::LEARN, os)?;
                 let tar_gz = self.github_api.download_assets(url).await?.into_std().await;
                 println!("Unpacking...");
@@ -167,12 +176,16 @@ impl App {
         Ok(())
     }
 
-    pub async fn command_update(&mut self, force: bool) -> Result<(), Error> {
+    pub async fn command_update(
+        &mut self,
+        force: bool,
+        opts: Option<UpdateCommand>,
+    ) -> Result<(), Error> {
         if let Err(err) = self.update_launcher(force).await {
             let err = err.to_string().red();
             println!("Launcher updating failed: {err}");
         }
-        if let Err(err) = self.update_ri_learn(force).await {
+        if let Err(err) = self.update_ri_learn(force, opts).await {
             let err = err.to_string().red();
             println!("App updating failed: {err}");
         }

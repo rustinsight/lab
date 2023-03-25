@@ -1,7 +1,7 @@
 use crate::app_info::AppInfo;
 use crate::built_info;
 use crate::RI_USER_AGENT;
-use anyhow::Error;
+use anyhow::{anyhow as err, Error};
 use futures::StreamExt;
 use indicatif::ProgressBar;
 use reqwest::header::{CONTENT_LENGTH, USER_AGENT};
@@ -98,7 +98,7 @@ impl Release {
                 return Ok(&asset.browser_download_url);
             }
         }
-        Err(Error::msg("Assets for the current OS was not found"))
+        Err(err!("Assets for '{os}' system was not found"))
     }
 }
 
