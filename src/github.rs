@@ -83,12 +83,7 @@ pub struct Release {
 }
 
 impl Release {
-    pub fn get_asset_for_os(
-        &self,
-        app_info: &AppInfo,
-        system: Option<&str>,
-    ) -> Result<&str, Error> {
-        let os = system.unwrap_or(built_info::CFG_OS);
+    pub fn get_asset_for_os(&self, app_info: &AppInfo, os: &str) -> Result<&str, Error> {
         let arch = built_info::CFG_TARGET_ARCH;
         let ver = &self.version;
         let name = &app_info.name;

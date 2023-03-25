@@ -8,6 +8,7 @@ repository = "https://github.com/rustinsight/lab"
 homepage = "https://rustinsight.com"
 license = "GPL-3.0"
 readme = "README.md"
+default-run = "rustinsight"
 
 [dependencies]
 anyhow = "1.0.70"

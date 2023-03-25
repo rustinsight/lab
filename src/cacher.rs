@@ -1,5 +1,4 @@
-use crate::app_info;
-use crate::VERSION;
+use crate::{app_info, built_info, VERSION};
 use anyhow::Error;
 use chrono::{DateTime, Duration, Utc};
 use derive_more::{Deref, DerefMut};
@@ -10,15 +9,30 @@ use tokio::fs;
 use tokio::fs::File;
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct CacherState {
+pub struct GlobalConfig {
+    pub system: String,
+}
+
+impl Default for GlobalConfig {
+    fn default() -> Self {
+        Self {
+            system: built_info::CFG_OS.into(),
+        }
+    }
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct LauncherConfig {
+    pub global: GlobalConfig,
     pub launcher: AppState,
     pub ri_learn: AppState,
     pub ri_stack: AppState,
 }
 
-impl Default for CacherState {
+impl Default for LauncherConfig {
     fn default() -> Self {
         Self {
+            global: GlobalConfig::default(),
             launcher: AppState {
                 version: Some(VERSION.clone()),
                 last_check: None,
@@ -43,14 +57,14 @@ pub struct AppState {
 
 impl AppState {
     pub fn is_update_required(&self) -> bool {
-        self.is_not_exist() || self.is_allowned_to_check()
+        self.is_not_exist() || self.is_allowed_to_check()
     }
 
     pub fn is_not_exist(&self) -> bool {
         self.version.is_none()
     }
 
-    pub fn is_allowned_to_check(&self) -> bool {
+    pub fn is_allowed_to_check(&self) -> bool {
         let deadline = Utc::now() - Duration::days(1);
         match &self.last_check {
             None => true,
@@ -90,7 +104,7 @@ pub struct Cacher {
     state_path: PathBuf,
     #[deref]
     #[deref_mut]
-    state: CacherState,
+    state: LauncherConfig,
 }
 
 impl Cacher {
@@ -106,7 +120,7 @@ impl Cacher {
         let mut state_path = cache_dir.clone();
         state_path.push("launcher.toml");
 
-        let state = CacherState::default();
+        let state = LauncherConfig::default();
         Ok(Self {
             cache_dir,
             bin_dir,

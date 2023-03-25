@@ -85,11 +85,15 @@ impl App {
         update_cmd: Option<UpdateCommand>,
     ) -> Result<(), Error> {
         let mut force_reload = false;
-        let mut os = None;
+        // let mut os = None;
         if let Some(update_cmd) = update_cmd.as_ref() {
             force_reload = update_cmd.force;
-            os = update_cmd.system.as_ref().map(String::as_ref);
+            if let Some(os) = &update_cmd.system {
+                // Overrides the system
+                self.cacher.global.system = os.clone();
+            }
         }
+        let os = self.cacher.global.system.as_ref();
         if self.cacher.ri_learn.is_update_required() || force_check {
             println!("Checking an update for the app...");
             let latest = self.github_api.latest_release(&app_info::LEARN).await?;
