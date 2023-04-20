@@ -794,6 +794,33 @@ dependencies = [
 ]
 
 [[package]]
+name = "knowledge"
+version = "0.4.0"
+dependencies = [
+ "anyhow",
+ "built",
+ "chrono",
+ "clap",
+ "colored",
+ "derive_more",
+ "dialoguer",
+ "dirs 5.0.0",
+ "flate2",
+ "futures",
+ "indicatif",
+ "once_cell",
+ "platforms",
+ "reqwest",
+ "semver",
+ "serde",
+ "tar",
+ "tempfile",
+ "tokio",
+ "toml 0.7.3",
+ "webbrowser",
+]
+
+[[package]]
 name = "lazy_static"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1155,33 +1182,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bfa0f585226d2e68097d4f95d113b15b83a82e819ab25717ec0590d9584ef366"
 dependencies = [
  "semver",
-]
-
-[[package]]
-name = "rustinsight"
-version = "0.3.0"
-dependencies = [
- "anyhow",
- "built",
- "chrono",
- "clap",
- "colored",
- "derive_more",
- "dialoguer",
- "dirs 5.0.0",
- "flate2",
- "futures",
- "indicatif",
- "once_cell",
- "platforms",
- "reqwest",
- "semver",
- "serde",
- "tar",
- "tempfile",
- "tokio",
- "toml 0.7.3",
- "webbrowser",
 ]
 
 [[package]]
