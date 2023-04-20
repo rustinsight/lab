@@ -1,8 +1,8 @@
 use anyhow::Error;
 use clap::Parser;
 use colored::Colorize;
-use rustinsight::app::App;
-use rustinsight::opts::Opts;
+use knowledge::app::App;
+use knowledge::opts::Opts;
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {

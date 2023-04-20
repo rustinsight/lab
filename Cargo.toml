@@ -1,5 +1,5 @@
 [package]
-name = "rustinsight"
+name = "knowledge"
 version = "0.3.0"
 edition = "2021"
 authors = ["Denis Kolodin <deniskolodin@gmail.com>"]
@@ -8,7 +8,7 @@ repository = "https://github.com/rustinsight/lab"
 homepage = "https://rustinsight.com"
 license = "GPL-3.0"
 readme = "README.md"
-default-run = "rustinsight"
+default-run = "knowledge"
 
 [dependencies]
 anyhow = "1.0.70"
