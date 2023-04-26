@@ -2,7 +2,7 @@
 
 An interactive way of learning Rust.
 
-Subscribe here: https://rustinsight.com/
+Subscribe here: https://deniskolodin.com/
 
 ## Usage
 

@@ -69,7 +69,7 @@ impl App {
                 println!(
                     "New version of launcher is available. To update run the following command"
                 );
-                let command = "cargo install rustinsight".green();
+                let command = "cargo install knowledge".green();
                 println!("{command}");
             }
 
