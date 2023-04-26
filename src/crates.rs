@@ -4,7 +4,7 @@ use reqwest::{header::USER_AGENT, Client};
 use semver::Version;
 use serde::Deserialize;
 
-const BASE: &str = "https://crates.io/api/v1/crates/rustinsight";
+const BASE: &str = "https://crates.io/api/v1/crates/knowledge";
 
 pub struct CratesApi {
     client: Client,
