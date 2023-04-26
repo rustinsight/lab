@@ -39,6 +39,10 @@ built = "0.6.0"
 name = "ride"
 required-features = ["ride"]
 
+[[bin]]
+name = "rustinsight"
+required-features = ["rustinsight"]
+
 [features]
 default = ["ride"]
 ride = []
