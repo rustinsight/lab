@@ -1,6 +1,6 @@
 [package]
 name = "knowledge"
-version = "0.4.2"
+version = "0.4.3"
 edition = "2021"
 authors = ["Denis Kolodin <deniskolodin@gmail.com>"]
 description = "The launcher app for the interacive book"
@@ -41,7 +41,7 @@ required-features = ["ride"]
 
 [[bin]]
 name = "rustinsight"
-required-features = ["rustinsight"]
+required-features = ["ride"]
 
 [features]
 default = ["ride"]
