@@ -1,5 +1,11 @@
 # Release 0.3.0
 
+The name is changed to: [knowledge.dev](https://knowledge.dev/)
+
+- Dependencies are upgraded to fix issues on some systems.
+
+# Release 0.3.0
+
 - [x] Persist the `system` type in the config file
 
 To override the system use:
