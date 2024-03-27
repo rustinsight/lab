@@ -1,8 +1,8 @@
-# Lab
+# Knowledge.Dev Launcher
 
-An interactive way of learning Rust.
+Practice Rust on your laptop.
 
-Subscribe here: https://deniskolodin.com/
+Subscribe here: https://knowledge.dev/
 
 ## Usage
 
@@ -15,7 +15,7 @@ cargo install knowledge
 When the launcher is installed, execute it.
 
 ```
-ride
+knowledge
 ```
 
 It will download the latest release and spawn the instance of the app.
