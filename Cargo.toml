@@ -1,11 +1,11 @@
 [package]
 name = "knowledge"
-version = "0.4.3"
+version = "0.4.4"
 edition = "2021"
 authors = ["Denis Kolodin <deniskolodin@gmail.com>"]
 description = "The launcher app for the interacive book"
 repository = "https://github.com/rustinsight/lab"
-homepage = "https://deniskolodin.com"
+homepage = "https://knowledge.dev"
 license = "GPL-3.0"
 readme = "README.md"
 default-run = "knowledge"
